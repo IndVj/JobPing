@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GPwczGrti+w=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\vijay\\source\\repos\\IndVj\\JobPing\\Infrastructure\\Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vijay\\.nuget\\packages\\htmlagilitypack\\1.12.1\\htmlagilitypack.1.12.1.nupkg.sha512"
+  ],
+  "logs": []
+}
