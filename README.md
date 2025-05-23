@@ -1,95 +1,132 @@
-JobPing is a clean-architecture .NET 8 console application that scrapes job listings from company career pages, filters them using custom keywords (e.g., `.NET`, `C#`, `ASP.NET`), and sends real-time alerts to a Discord channel. 
-It also tracks which jobs have already been notified using a local JSON file, and can be automated using GitHub Actions.
+# JobPing
+
+**JobPing** is a modular, clean-architecture **.NET 8 console application** that scrapes job listings from company career pages, filters them using specific keywords (like `.NET`, `C#`, `ASP.NET`), and sends real-time notifications to a Discord channel.
+
+It’s designed to be site-agnostic and extensible: you can add a new scraper per site by implementing a simple interface.
 
 ---
 
-## 📁 Project Structure
+## 🔧 Features
+- ✅ Clean architecture with separation of concerns: Core, Infrastructure, and App layers
+- 🌐 Supports multiple career sites with plug-and-play scraper classes
+- 🧠 Filters jobs by custom keywords
+- 🔔 Sends alerts to Discord using webhooks
+- 💾 Tracks already-notified jobs in a local `jobs.json` file
+- ⏱ Automatable with GitHub Actions for scheduled job runs (e.g., every 6 hours)
+
+---
+
+## 🧱 Architecture
 
 ```
 JobPing/
-├── Core/                 # Interfaces and models
-├── Infrastructure/       # Web scraping, persistence, and notification logic
-├── App/                  # Console entry point and configuration
+├── Core/                 # Interfaces and shared models
+│   └── IJobScraper.cs, Job.cs
+├── Infrastructure/       # Implements scrapers, Discord notifier, JSON store
+│   └── LesJeudisScraper.cs, DiscordNotifier.cs, JsonJobRepository.cs
+├── App/                  # Console entry point and config loader
 │   ├── appsettings.json
 │   ├── JobPingApp.cs
 │   └── Program.cs
-├── .github/workflows/   # GitHub Actions workflow
-├── jobs.json             # Tracks notified jobs
+├── jobs.json             # Tracks seen jobs
+├── .github/workflows/    # GitHub Actions workflow
 ```
 
 ---
 
-## 🚀 How to Run Locally
+## 🚀 Getting Started
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/JobPing.git
-   cd JobPing/App
-   ```
+### 1. Clone the Repo
+```bash
+git clone https://github.com/your-username/JobPing.git
+cd JobPing
+```
 
-2. **Configure `appsettings.json`**
-   Create the file if missing:
-   ```json
-   {
-     "JobPages": [
-       "https://example.com/careers1",
-       "https://example.com/careers2"
-     ],
-     "DiscordWebhookUrl": "https://discord.com/api/webhooks/your_id/your_token",
-     "Keywords": [ ".NET", "C#", "ASP.NET" ]
-   }
-   ```
+### 2. Setup Configuration
+Create `App/appsettings.json`:
+```json
+{
+  "JobPages": [
+    "https://lesjeudis.com/jobs"
+  ],
+  "DiscordWebhookUrl": "https://discord.com/api/webhooks/...",
+  "Keywords": [ ".NET", "C#", "ASP.NET" ]
+}
+```
 
-3. **Run the App**
-   ```bash
-   dotnet run
-   ```
+> 💡 Use `appsettings.template.json` to share structure without secrets
 
----
+### 3. Run Locally
+```bash
+cd App
+dotnet run
+```
 
-## 🤖 GitHub Actions Automation
-
-The GitHub Actions workflow (`.github/workflows/schedule.yml`) runs every 6 hours and does the following:
-- Builds and runs the app
-- Sends notifications for new jobs
-- Updates `jobs.json`
-- Commits changes to the repository
-
-To enable:
-1. Commit and push the project to GitHub
-2. Make sure `jobs.json` is included and tracked
-3. Add secrets via GitHub repository settings (if hiding sensitive values)
+> Ensure you are using **.NET 8 SDK**:
+```bash
+dotnet --version  # should be 8.x.x
+```
 
 ---
 
-## 🧾 Sample Discord Webhook Setup
-1. Open Discord → your server
-2. Go to **Channel Settings → Integrations → Webhooks**
-3. Click **Create Webhook**, name it, and copy the URL
-4. Paste the URL into `appsettings.json`
+## 🤖 GitHub Actions (Optional)
+Automate scraping and Discord alerts every 6 hours. Workflow file: `.github/workflows/schedule.yml`
+
+### Includes:
+- Restore, build, run app
+- Commit updated `jobs.json` to repo
 
 ---
 
-## 🛑 .gitignore Suggestions
+## 🛠 Adding a New Scraper
+Each site is different. To scrape a new site:
+1. Create a class in `Infrastructure/` implementing `IJobScraper`
+2. Inject it in `JobPingApp.cs` based on the URL
+
+Example:
+```csharp
+public class LesJeudisScraper : IJobScraper
+{
+    public async Task<List<Job>> ScrapeJobsAsync() {
+        // site-specific logic here
+    }
+}
+```
+
+---
+
+## 📄 .gitignore Suggestions
 ```gitignore
-# Build and IDE
+# Binaries
 **/bin/
 **/obj/
+
+# User settings
 .vscode/
 *.user
 
-# Config and state
+# Secrets
 App/appsettings.json
 
-# Track this if using GitHub Actions
+# Keep runtime job state
 !App/jobs.json
 ```
 
 ---
 
-## 📚 Credits & Notes
-- Built with .NET 8 and HtmlAgilityPack
-- Uses Discord Webhooks for instant alerts
-- Designed for modularity using Clean Architecture
+## 📌 Notes
+- Some sites require custom XPath selectors or authentication.
+- HTML structures change — scrapers may need maintenance.
+- Respect robots.txt and TOS when scraping public sites.
 
-Feel free to fork, adapt, or extend JobPing for your own job tracking needs!
+---
+
+## 🙌 Contributing
+1. Fork the repo
+2. Add support for a new job site
+3. Submit a pull request!
+
+---
+
+## 🔗 License
+MIT — free to use, modify, and share.
