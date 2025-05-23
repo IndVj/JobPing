@@ -13,3 +13,4 @@ C:\Users\vijay\source\repos\IndVj\JobPing\Infrastructure\obj\Debug\net8.0\Infras
 C:\Users\vijay\source\repos\IndVj\JobPing\Infrastructure\obj\Debug\net8.0\refint\Infrastructure.dll
 C:\Users\vijay\source\repos\IndVj\JobPing\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 C:\Users\vijay\source\repos\IndVj\JobPing\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+C:\Users\vijay\source\repos\IndVj\JobPing\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json

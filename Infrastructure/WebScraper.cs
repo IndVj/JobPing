@@ -18,7 +18,39 @@ namespace Infrastructure
             var jobs = new List<Job>();
             var web = new HtmlWeb();
             var doc = await web.LoadFromWebAsync(_url);
-            // Implement specific scraping logic here
+
+
+            var jobCards = doc.DocumentNode.SelectNodes("//div[@data-testid='base-job-card-container']");
+
+            if (jobCards == null)
+                return jobs;
+
+            foreach (var card in jobCards)
+            {
+                var titleNode = card.SelectSingleNode(".//a[contains(@class, 'BaseJobCard_jobTitle__ehsas')]");
+
+                var locationNode = card.SelectSingleNode(".//div[@data-testid='job-location-tag']//span");
+
+                if (titleNode == null || locationNode == null)
+                    continue;
+
+                var relativeUrl = titleNode.GetAttributeValue("href", "").Trim();
+
+                Uri uri = new Uri(_url);
+                string baseUrl = $"{uri.Scheme}://{uri.Host}";
+
+                var absoluteUrl = new Uri(baseUrl + relativeUrl).AbsoluteUri;
+
+                var job = new Job
+                {
+                    Title = HtmlEntity.DeEntitize(titleNode.InnerText.Trim()),
+                    Description = $"Location: {locationNode.InnerText.Trim()}",
+                    Url = absoluteUrl
+                };
+
+                jobs.Add(job);
+            }
+
             return jobs;
         }
     }

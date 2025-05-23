@@ -6,7 +6,7 @@ namespace Infrastructure
 {
     public class JsonJobRepository : IJobRepository
     {
-        private readonly string _filePath = "jobs.json";
+        private readonly string _filePath = "/*jobs*/.json";
 
         public async Task<List<Job>> LoadNotifiedJobsAsync()
         {
