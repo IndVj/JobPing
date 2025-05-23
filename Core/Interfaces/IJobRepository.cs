@@ -4,7 +4,7 @@ namespace Core.Interfaces
 {
     public interface IJobRepository
     {
-        Task<List<Job>> LoadNotifiedJobsAsync();
-        Task SaveNotifiedJobsAsync(List<Job> jobs);
+        Task<HashSet<Job>> LoadNotifiedJobsAsync();
+        Task SaveNotifiedJobsAsync(HashSet<Job> jobs);
     }
 }
