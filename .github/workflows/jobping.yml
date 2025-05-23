@@ -2,7 +2,7 @@ name: Run JobPing every 6 hours
 
 on:
   schedule:
-    - cron: '0 */8 * * *'  # Every 6 hours
+    - cron: '0 */9 * * *'  # Every 9 hours
   workflow_dispatch:
 
 jobs:
