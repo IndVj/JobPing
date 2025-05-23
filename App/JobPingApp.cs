@@ -9,7 +9,8 @@ namespace App
         public static async Task RunAsync(string[] jobPages, string discordWebhookUrl, string[] keywords)
         {
             IJobRepository repo = new JsonJobRepository();
-            INotifier notifier = new DiscordNotifier(discordWebhookUrl);
+            DiscordNotifier discordNotifier = new DiscordNotifier(discordWebhookUrl);
+            INotifier notifier = discordNotifier;
             var allJobs = new List<Job>();
 
             foreach (var pageUrl in jobPages)
@@ -32,6 +33,7 @@ namespace App
             }
 
             notifiedJobs.AddRange(newJobs);
+            
             await repo.SaveNotifiedJobsAsync(notifiedJobs);
         }
     }
