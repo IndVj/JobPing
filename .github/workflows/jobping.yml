@@ -1,4 +1,4 @@
-name: Run JobPing every 6 hours
+name: Run JobPing every 9 hours
 
 on:
   schedule:
