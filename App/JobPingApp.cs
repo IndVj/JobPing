@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using App.Helper;
+using Core.Interfaces;
 using Core.Models;
 using Infrastructure;
 
@@ -8,7 +9,7 @@ namespace App
     {
         public static async Task RunAsync(string[] jobPages, string discordWebhookUrl, string[] keywords)
         {
-            IJobRepository repo = new JsonJobRepository();
+            
             INotifier notifier = new DiscordNotifier(discordWebhookUrl);
 
             var allJobs = new List<Job>();
@@ -21,6 +22,10 @@ namespace App
                 allJobs.AddRange(jobs);
             }
 
+            var filePath = PathUtil.ResolveFromProjectRoot();
+
+            IJobRepository repo = new JsonJobRepository(filePath);
+
             // Load previously notified jobs
             var notifiedJobs = await repo.LoadNotifiedJobsAsync();
 
@@ -31,7 +36,7 @@ namespace App
                 .Where(job => !notifiedJobs.Contains(job))
                 .ToList();
 
-            // Notify new jobs
+            //Notify new jobs
             foreach (var job in newJobs)
             {
                 await notifier.NotifyAsync(job);
@@ -42,6 +47,6 @@ namespace App
 
             // Save updated list
             await repo.SaveNotifiedJobsAsync(notifiedJobs);
-        }
+          }
     }
 }

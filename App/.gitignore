@@ -30,3 +30,7 @@ _ReSharper*/
 *.tlog
 *.vsidx
 *.cache
+
+# AppsettingsLocal
+
+settings.Development.json

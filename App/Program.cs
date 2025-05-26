@@ -1,8 +1,10 @@
 ﻿using App;
+using App.Helper;
 using Microsoft.Extensions.Configuration;
 
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
     .Build();
 
 var jobSitesFromEnv = Environment.GetEnvironmentVariable("JOB_SITE_URLS");
