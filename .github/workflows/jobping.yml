@@ -10,22 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: 🧰 Setup .NET 8
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      - name: 📦 Restore dependencies
+      - name: Restore dependencies
         run: dotnet restore App/JobPing.sln
 
-      - name: 🚀 Run JobPing
+      - name: Run JobPing
         run: dotnet run --project App/App.csproj
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           JOB_SITE_URLS: ${{ secrets.JOB_SITE_URLS }}
+  
+
+      - name: Set up Git remote with GITHUB_TOKEN
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: 💾 Commit updated jobs.json
         run: |
